@@ -1,0 +1,27 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "./y.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/video",
+            "dest": "/y.js"
+        },
+        {
+            "src": "/video",
+            "dest": "/y.js"
+        },
+        {
+            "src": "/audio",
+            "dest": "/y.js"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/y.js"
+        }
+    ]
+}
