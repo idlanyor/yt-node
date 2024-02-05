@@ -35,10 +35,18 @@ app.get('/api/video', async (req, res) => { // Menyesuaikan endpoint menjadi /ap
     }
 
     try {
-        const video = await youtubedl(url, 
-            { dump: true,
-            
-            });
+        const video = await youtubedl(url,
+            {
+                dumpSingleJson: true,
+                noCheckCertificates: true,
+                noWarnings: true,
+                preferFreeFormats: true,
+                addHeader: [
+                    'referer:youtube.com',
+                    'user_agent:googlebot'
+                ]
+
+            })
         const downloadLink = getDownloadUrl(req, 'api/video-download?url=' + encodeURIComponent(url)); // Menyesuaikan path untuk link unduh
 
         const responseData = {
@@ -52,7 +60,7 @@ app.get('/api/video', async (req, res) => { // Menyesuaikan endpoint menjadi /ap
         res.json(responseData);
     } catch (error) {
         console.error('Gagal mengunduh video:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan saat mengunduh video.' });
+        res.status(500).json({ error: 'Terjadi kesalahan saat mengunduh video.'+error });
     }
 });
 
@@ -94,6 +102,7 @@ app.get('/api/video-download', async (req, res) => { // Menyesuaikan endpoint me
         const video = await youtubedl(url, { output: '%(title)s.%(ext)s' });
         res.set('Content-Disposition', `attachment; filename="${video.title}.mp4"`);
         res.set('Content-Type', 'video/mp4');
+        console.log(res)
         video.pipe(res);
     } catch (error) {
         console.error('Gagal mengunduh video:', error);
